@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "686345621610",
+    "project_id": "jimapp-7420c",
+    "storage_bucket": "jimapp-7420c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686345621610:android:198b54af366a9944e33a13",
+        "android_client_info": {
+          "package_name": "com.gym.jim_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEuRlLU-nGJQ_9VU6ptHCdDXyBL9X3Kak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
