@@ -17,7 +17,7 @@ Fitur ini membantu pengguna dalam mengelola rutinitas latihan mereka dengan mela
 
 1. **Clone repository:**
    ```sh
-   git clone https://github.com/yourusername/jimapp.git
+   git clone https://github.com/Resanso/jimapp.git
    cd jimapp
 2. **Install dependencies:**
    flutter pub get
