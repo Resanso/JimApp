@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jim/core/models/workout_split.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Controller untuk mengelola penambahan jadwal latihan (split workout)
 class AddSplitController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final selectedWorkouts = <String, List<WorkoutDetails>>{}.obs;
@@ -17,6 +18,14 @@ class AddSplitController extends GetxController {
     'Sunday'
   ];
 
+  /// Menambahkan workout ke dalam jadwal hari tertentu
+  ///
+  /// [day] - Hari dalam seminggu (Senin-Minggu)
+  /// [workoutId] - ID latihan yang dipilih
+  /// [sets] - Jumlah set latihan
+  /// [reps] - Jumlah pengulangan per set
+  /// [weight] - Berat beban yang digunakan
+  /// [restTime] - Waktu istirahat dalam detik
   void addWorkoutToDay(String day, String workoutId, int sets, int reps,
       double weight, int restTime) {
     if (!selectedWorkouts.containsKey(day)) {
@@ -38,6 +47,10 @@ class AddSplitController extends GetxController {
     update();
   }
 
+  /// Menghapus workout dari jadwal hari tertentu
+  ///
+  /// [day] - Hari dalam seminggu
+  /// [workoutId] - ID latihan yang akan dihapus
   void removeWorkoutFromDay(String day, String workoutId) {
     if (selectedWorkouts.containsKey(day)) {
       selectedWorkouts[day]!
@@ -49,6 +62,14 @@ class AddSplitController extends GetxController {
     }
   }
 
+  /// Memperbarui detail workout yang sudah ada
+  ///
+  /// [day] - Hari dalam seminggu
+  /// [workoutId] - ID latihan yang akan diupdate
+  /// [sets] - Jumlah set baru (opsional)
+  /// [reps] - Jumlah pengulangan baru (opsional)
+  /// [weight] - Berat beban baru (opsional)
+  /// [restTime] - Waktu istirahat baru (opsional)
   void updateWorkoutDetails(
     String day,
     String workoutId, {
@@ -74,6 +95,13 @@ class AddSplitController extends GetxController {
     }
   }
 
+  /// Menyimpan jadwal latihan ke Firebase
+  ///
+  /// Memvalidasi input dan menyimpan split workout ke Firestore.
+  /// Akan menampilkan error jika:
+  /// - Nama split kosong
+  /// - Tidak ada workout yang dipilih
+  /// - User tidak terautentikasi
   Future<void> saveSplit() async {
     try {
       if (splitName.value.isEmpty) {

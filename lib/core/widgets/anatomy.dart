@@ -2,15 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+/// Widget yang menampilkan anatomi otot tubuh manusia dengan kemampuan
+/// untuk menyorot otot-otot yang sedang dilatih.
+///
+/// Widget ini menggunakan SVG untuk menampilkan gambar anatomi dan mendukung
+/// animasi pulsing (berkedip) pada otot-otot yang dipilih.
 class MuscleAnatomy extends StatefulWidget {
+  /// List yang berisi nama-nama otot yang sedang dilatih.
+  /// Perubahan pada list ini akan memicu pembaruan tampilan otot.
   final RxList<String> trainedMuscles;
+
+  /// Fungsi callback yang menentukan warna untuk setiap otot.
+  /// Menerima nama otot sebagai parameter dan mengembalikan Color.
   final Color Function(String) colorCallback;
 
   const MuscleAnatomy({
-    Key? key,
+    super.key,
     required this.trainedMuscles,
     required this.colorCallback,
-  }) : super(key: key);
+  });
 
   @override
   State<MuscleAnatomy> createState() => _MuscleAnatomyState();
@@ -18,25 +28,37 @@ class MuscleAnatomy extends StatefulWidget {
 
 class _MuscleAnatomyState extends State<MuscleAnatomy>
     with SingleTickerProviderStateMixin {
+  /// Menyimpan SVG untuk otot-otot yang tidak dilatih (statis)
   String? _staticSvg;
+
+  /// Menyimpan SVG untuk otot-otot yang sedang dilatih (beranimasi)
   String? _animatedSvg;
+
+  /// Controller untuk mengatur animasi kedipan
   late AnimationController _animationController;
+
+  /// Animasi opacity untuk efek kedipan
   late Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
+
+    // Inisialisasi controller animasi
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200), // Bisa disesuaikan
+      duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
 
+    // Konfigurasi animasi opacity
     _opacityAnimation = Tween<double>(
-      begin: 0.7, // Nilai minimum opacity
-      end: 1.0, // Nilai maximum opacity
+      begin: 0.7,
+      end: 1.0,
     ).animate(_animationController);
 
+    // Memproses SVG pertama kali
     _processSvg();
+    // Memantau perubahan pada trainedMuscles
     ever(widget.trainedMuscles, (_) => _processSvg());
   }
 
@@ -46,6 +68,13 @@ class _MuscleAnatomyState extends State<MuscleAnatomy>
     super.dispose();
   }
 
+  /// Memproses file SVG anatomi dan memisahkan antara
+  /// otot yang dilatih dan tidak dilatih.
+  ///
+  /// Method ini akan:
+  /// 1. Memuat file SVG dari assets
+  /// 2. Memisahkan path untuk otot statis dan beranimasi
+  /// 3. Mengatur warna sesuai status otot
   Future<void> _processSvg() async {
     final string = await DefaultAssetBundle.of(context)
         .loadString('assets/anatomy/body3.svg');
@@ -53,12 +82,12 @@ class _MuscleAnatomyState extends State<MuscleAnatomy>
     String staticPaths = string;
     String animatedPaths = string;
 
-    // Set default color for all paths
+    // Set warna default untuk semua path
     staticPaths = staticPaths.replaceAll('fill="#D9D9D9"', 'fill="#E0E0E0"');
     animatedPaths =
         animatedPaths.replaceAll('fill="#D9D9D9"', 'fill="#E0E0E0"');
 
-    // Process each trained muscle
+    // Proses setiap otot yang dilatih
     for (String muscle in widget.trainedMuscles) {
       final regexp =
           RegExp('(<path[^>]*id="$muscle(?:_left|_right)?"[^>]*?/>)');
@@ -107,9 +136,12 @@ class _MuscleAnatomyState extends State<MuscleAnatomy>
       return const Center(child: CircularProgressIndicator());
     }
 
+    /// Membangun tampilan dengan dua lapisan SVG:
+    /// 1. Lapisan dasar: otot-otot yang tidak dilatih (statis)
+    /// 2. Lapisan atas: otot-otot yang dilatih (beranimasi)
     return Stack(
-      alignment: Alignment.center, // Tambahkan alignment
-      fit: StackFit.expand, // Memastikan Stack mengisi ruang yang tersedia
+      alignment: Alignment.center,
+      fit: StackFit.expand,
       children: [
         // Static untrained muscles
         Positioned.fill(

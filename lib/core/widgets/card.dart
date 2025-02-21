@@ -1,12 +1,37 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
+/// Widget Card transparan yang memberikan efek blur pada latar belakangnya.
+///
+/// Widget ini menggunakan [BackdropFilter] untuk memberikan efek blur dan
+/// [ColorFilter] untuk mengatur transparansi.
+///
+/// Contoh penggunaan:
+/// ```dart
+/// TransparentCard(
+///   child: Text('Konten card'),
+///   padding: EdgeInsets.all(16),
+///   elevation: 2,
+/// )
+/// ```
 class TransparentCard extends StatelessWidget {
+  /// Widget yang akan ditampilkan di dalam card
   final Widget child;
+
+  /// Padding internal card
+  /// Nilai default adalah EdgeInsets.all(16)
   final EdgeInsetsGeometry? padding;
+
+  /// Margin eksternal card
+  /// Tidak memiliki nilai default
   final EdgeInsetsGeometry? margin;
+
+  /// Tingkat elevasi/bayangan card
+  /// Nilai default adalah 2
   final double elevation;
+
+  /// Radius sudut card
+  /// Nilai default adalah BorderRadius.all(Radius.circular(12))
   final BorderRadius? borderRadius;
 
   const TransparentCard({

@@ -6,9 +6,14 @@ import 'package:jim/core/constants/app_colors.dart';
 import 'package:jim/core/constants/app_styles.dart';
 import '../controllers/login_page_controller.dart';
 
+/// LoginPageView adalah widget yang menampilkan halaman login aplikasi.
+/// Widget ini menggunakan GetX untuk state management dan merupakan implementasi dari GetView.
 class LoginPageView extends GetView<LoginPageController> {
+  const LoginPageView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    // Membangun tampilan utama dengan Scaffold
     return Scaffold(
       backgroundColor: AppColors.primaryDark,
       body: SafeArea(
@@ -19,19 +24,21 @@ class LoginPageView extends GetView<LoginPageController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
-                // Lottie Animation
+                // Menampilkan animasi Lottie sebagai ilustrasi
                 Lottie.asset(
                   'assets/lottie.json',
                   height: 200,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 40),
+                // Judul halaman login
                 Text(
                   'Welcome Back!',
                   style: AppStyles.heading1.copyWith(
                     color: AppColors.accentRed,
                   ),
                 ),
+                // Subtitle halaman login
                 const SizedBox(height: 8),
                 Text(
                   'Sign in to continue your fitness journey',
@@ -39,6 +46,7 @@ class LoginPageView extends GetView<LoginPageController> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
+                // Field input email dengan dekorasi container
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
@@ -54,15 +62,16 @@ class LoginPageView extends GetView<LoginPageController> {
                   child: TextField(
                     controller: controller.emailController,
                     style: AppStyles.body1,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your email',
                       prefixIcon: Icon(Icons.email, color: AppColors.accentRed),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: EdgeInsets.all(16),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Field input password dengan dekorasi container
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
@@ -78,16 +87,17 @@ class LoginPageView extends GetView<LoginPageController> {
                   child: TextField(
                     controller: controller.passwordController,
                     style: AppStyles.body1,
-                    obscureText: true,
-                    decoration: InputDecoration(
+                    obscureText: true, // Menyembunyikan teks password
+                    decoration: const InputDecoration(
                       hintText: 'Enter your password',
                       prefixIcon: Icon(Icons.lock, color: AppColors.accentRed),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: EdgeInsets.all(16),
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
+                // Menampilkan pesan error jika ada
                 Obx(() => controller.errorMessage.value.isNotEmpty
                     ? Container(
                         padding: const EdgeInsets.all(8),
@@ -97,17 +107,18 @@ class LoginPageView extends GetView<LoginPageController> {
                         ),
                         child: Text(
                           controller.errorMessage.value,
-                          style: TextStyle(color: AppColors.accentRed),
+                          style: const TextStyle(color: AppColors.accentRed),
                           textAlign: TextAlign.center,
                         ),
                       )
                     : const SizedBox()),
                 const SizedBox(height: 32),
+                // Tombol login dengan indikator loading
                 SizedBox(
                   width: double.infinity,
                   child: Obx(() => ElevatedButton(
                         onPressed: controller.isLoading.value
-                            ? null
+                            ? null // Menonaktifkan tombol saat loading
                             : controller.login,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.accentRed,
@@ -130,6 +141,7 @@ class LoginPageView extends GetView<LoginPageController> {
                       )),
                 ),
                 const SizedBox(height: 16),
+                // Tombol untuk navigasi ke halaman registrasi
                 TextButton(
                   onPressed: () => Get.toNamed(Routes.REGISTER),
                   child: Text(

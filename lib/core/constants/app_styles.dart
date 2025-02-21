@@ -10,7 +10,7 @@ class AppStyles {
 
   /* ========== Text Styles ========== */
   // Heading
-  static TextStyle heading1 = TextStyle(
+  static TextStyle heading1 = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textHeading1,
     fontWeight: FontWeight.bold,
@@ -18,7 +18,7 @@ class AppStyles {
     letterSpacing: -1,
   );
 
-  static TextStyle heading2 = TextStyle(
+  static TextStyle heading2 = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textHeading2,
     fontWeight: FontWeight.bold,
@@ -26,7 +26,7 @@ class AppStyles {
     letterSpacing: -0.3,
   );
 
-  static TextStyle heading3 = TextStyle(
+  static TextStyle heading3 = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textHeading3,
     fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class AppStyles {
   );
 
   // Body Text
-  static TextStyle body1 = TextStyle(
+  static TextStyle body1 = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textBody1,
     fontWeight: FontWeight.normal,
@@ -42,7 +42,7 @@ class AppStyles {
     height: 1.5,
   );
 
-  static TextStyle body2 = TextStyle(
+  static TextStyle body2 = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textBody2,
     fontWeight: FontWeight.normal,
@@ -50,7 +50,7 @@ class AppStyles {
   );
 
   // Caption
-  static TextStyle caption = TextStyle(
+  static TextStyle caption = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textCaption,
     fontWeight: FontWeight.w500,
@@ -58,7 +58,7 @@ class AppStyles {
   );
 
   // Button Text
-  static TextStyle button = TextStyle(
+  static TextStyle button = const TextStyle(
     fontFamily: 'PlusJakartaSans',
     fontSize: AppSizes.textBody1,
     fontWeight: FontWeight.bold,
@@ -70,7 +70,7 @@ class AppStyles {
   static InputDecorationTheme inputDecoration = InputDecorationTheme(
     filled: true,
     fillColor: AppColors.deepDark,
-    contentPadding: EdgeInsets.all(AppSizes.spaceMedium),
+    contentPadding: const EdgeInsets.all(AppSizes.spaceMedium),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
       borderSide: BorderSide.none,
@@ -86,7 +86,7 @@ class AppStyles {
 
   /* ========== Button Styles ========== */
   static ButtonStyle primaryButton = ElevatedButton.styleFrom(
-    minimumSize: Size(AppSizes.buttonWidth, AppSizes.buttonHeight),
+    minimumSize: const Size(AppSizes.buttonWidth, AppSizes.buttonHeight),
     backgroundColor: AppColors.accentRed,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
@@ -96,7 +96,7 @@ class AppStyles {
 
   static ButtonStyle secondaryButton = ElevatedButton.styleFrom(
     backgroundColor: Colors.transparent,
-    side: BorderSide(color: AppColors.accentRed),
+    side: const BorderSide(color: AppColors.accentRed),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
     ),
@@ -105,7 +105,7 @@ class AppStyles {
   /* ========== Card Theme ========== */
   static CardTheme cardTheme = CardTheme(
     color: AppColors.secondaryDark,
-    margin: EdgeInsets.all(AppSizes.spaceSmall),
+    margin: const EdgeInsets.all(AppSizes.spaceSmall),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
     ),

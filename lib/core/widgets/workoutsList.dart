@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,9 +8,18 @@ import '../constants/app_styles.dart';
 import '../constants/app_sizes.dart';
 import 'addWorkout.dart';
 
+/// Widget WorkoutList menampilkan daftar workout dalam bentuk grid
+/// dengan gambar dan informasi dasar untuk setiap workout.
+///
+/// Widget ini menggunakan StreamBuilder untuk mendengarkan perubahan data
+/// dari Firestore secara real-time.
 class WorkoutList extends StatelessWidget {
   const WorkoutList({super.key});
 
+  /// Menampilkan dialog detail workout ketika item workout di tap
+  ///
+  /// [context] adalah BuildContext untuk menampilkan dialog
+  /// [workout] adalah Map yang berisi data workout yang akan ditampilkan
   void _showWorkoutDetail(BuildContext context, Map<String, dynamic> workout) {
     showDialog(
       context: context,
@@ -40,10 +51,10 @@ class WorkoutList extends StatelessWidget {
                         height: 300,
                         fit: BoxFit.cover,
                         placeholder: (context, url) =>
-                            CircularProgressIndicator(
+                            const CircularProgressIndicator(
                           color: AppColors.accentGreen,
                         ),
-                        errorWidget: (context, url, error) => Icon(
+                        errorWidget: (context, url, error) => const Icon(
                           Icons.error,
                           color: AppColors.accentRed,
                           size: AppSizes.iconLarge,
@@ -51,7 +62,7 @@ class WorkoutList extends StatelessWidget {
                       ),
                     )
                   else
-                    Icon(
+                    const Icon(
                       Icons.fitness_center,
                       size: AppSizes.iconLarge * 2,
                       color: AppColors.accentGreen,
@@ -97,10 +108,12 @@ class WorkoutList extends StatelessWidget {
       backgroundColor: AppColors.primaryDark,
       body: SafeArea(
         child: StreamBuilder(
+          // Stream untuk mengambil data workout dari collection 'workouts' di Firestore
           stream: FirebaseFirestore.instance.collection('workouts').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            // Menampilkan loading indicator saat data belum tersedia
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(
                   color: AppColors.accentGreen,
                 ),
@@ -108,6 +121,7 @@ class WorkoutList extends StatelessWidget {
             }
 
             var workouts = snapshot.data!.docs;
+            // Menampilkan pesan jika tidak ada workout yang ditemukan
             if (workouts.isEmpty) {
               return Center(
                 child: Text(
@@ -117,6 +131,7 @@ class WorkoutList extends StatelessWidget {
               );
             }
 
+            // Menampilkan grid workout dengan 2 kolom
             return GridView.builder(
               padding: const EdgeInsets.all(AppSizes.spaceMedium),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -127,7 +142,10 @@ class WorkoutList extends StatelessWidget {
               ),
               itemCount: workouts.length,
               itemBuilder: (context, index) {
+                // Mengubah document snapshot menjadi Map
                 var workout = workouts[index].data() as Map<String, dynamic>;
+
+                // Membuat card untuk setiap workout
                 return Card(
                   elevation: AppSizes.buttonElevation,
                   shape: RoundedRectangleBorder(
@@ -135,11 +153,13 @@ class WorkoutList extends StatelessWidget {
                   ),
                   color: AppColors.secondaryDark,
                   child: InkWell(
+                    // Menampilkan detail workout saat card di tap
                     onTap: () => _showWorkoutDetail(context, workout),
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // Menampilkan gambar workout atau icon default
                         Expanded(
                           flex: 3,
                           child: ClipRRect(
@@ -151,22 +171,24 @@ class WorkoutList extends StatelessWidget {
                                     imageUrl: workout['image'],
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) =>
-                                        CircularProgressIndicator(
+                                        const CircularProgressIndicator(
                                       color: AppColors.accentGreen,
                                     ),
-                                    errorWidget: (context, url, error) => Icon(
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(
                                       Icons.fitness_center,
                                       size: AppSizes.iconLarge,
                                       color: AppColors.accentGreen,
                                     ),
                                   )
-                                : Icon(
+                                : const Icon(
                                     Icons.fitness_center,
                                     size: AppSizes.iconLarge,
                                     color: AppColors.accentGreen,
                                   ),
                           ),
                         ),
+                        // Menampilkan informasi workout (nama dan target)
                         Expanded(
                           flex: 2,
                           child: Padding(
@@ -201,6 +223,7 @@ class WorkoutList extends StatelessWidget {
           },
         ),
       ),
+      // Floating action button untuk menambah workout baru
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -209,7 +232,7 @@ class WorkoutList extends StatelessWidget {
           );
         },
         backgroundColor: AppColors.accentRed,
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: AppColors.textPrimary,
           size: AppSizes.iconMedium,

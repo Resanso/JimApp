@@ -4,9 +4,16 @@ import 'package:jim/core/constants/app_colors.dart';
 import 'package:jim/core/constants/app_styles.dart';
 import '../controllers/settings_controller.dart';
 
+/// Widget untuk menampilkan halaman pengaturan aplikasi.
+///
+/// Halaman ini menampilkan daftar pengaturan yang tersedia dan tombol logout.
+/// Menggunakan GetX untuk manajemen state dan navigasi.
 class SettingsView extends GetView<SettingsController> {
+  const SettingsView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    // Membangun tampilan utama halaman pengaturan
     return Scaffold(
       backgroundColor: AppColors.primaryDark,
       appBar: AppBar(
@@ -17,15 +24,15 @@ class SettingsView extends GetView<SettingsController> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Add other settings items here
+          // Tempat untuk menambahkan item pengaturan lainnya
 
-          // Logout Button
+          // Tombol Logout
           ListTile(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             tileColor: AppColors.secondaryDark,
-            leading: Icon(Icons.logout, color: AppColors.accentRed),
+            leading: const Icon(Icons.logout, color: AppColors.accentRed),
             title: Text('Logout', style: AppStyles.body1),
             onTap: () => _showLogoutConfirmation(context),
           ),
@@ -34,6 +41,10 @@ class SettingsView extends GetView<SettingsController> {
     );
   }
 
+  /// Menampilkan dialog konfirmasi sebelum melakukan logout.
+  ///
+  /// [context] adalah BuildContext yang digunakan untuk menampilkan dialog.
+  /// Dialog ini memberikan pilihan untuk membatalkan atau melanjutkan proses logout.
   void _showLogoutConfirmation(BuildContext context) {
     Get.dialog(
       AlertDialog(
@@ -44,19 +55,21 @@ class SettingsView extends GetView<SettingsController> {
           style: AppStyles.body1,
         ),
         actions: [
+          // Tombol untuk membatalkan logout
           TextButton(
             onPressed: () => Get.back(),
-            child: Text(
+            child: const Text(
               'Cancel',
               style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
+          // Tombol untuk mengkonfirmasi logout
           TextButton(
             onPressed: () {
               Get.back();
               controller.logout();
             },
-            child: Text(
+            child: const Text(
               'Logout',
               style: TextStyle(color: AppColors.accentRed),
             ),

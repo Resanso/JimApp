@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jim/app/modules/addSplit/views/add_split_view.dart';
-import 'package:jim/app/modules/doExercise/views/do_exercise_view.dart';
 import 'package:jim/app/routes/app_pages.dart';
 import 'package:jim/core/constants/app_colors.dart';
 import 'package:jim/core/constants/app_styles.dart';
@@ -12,9 +11,15 @@ import 'package:jim/core/widgets/addWorkout.dart';
 import 'package:jim/core/widgets/workout_detail_popup.dart';
 import '../controllers/exercise_page_controller.dart';
 
+/// ExercisePageView adalah tampilan utama untuk menampilkan jadwal latihan pengguna.
+/// Kelas ini menampilkan daftar split workout yang dimiliki pengguna dan detail latihannya.
 class ExercisePageView extends GetView<ExercisePageController> {
-  const ExercisePageView({Key? key}) : super(key: key);
+  const ExercisePageView({super.key});
 
+  /// Menampilkan dialog konfirmasi sebelum menghapus split workout
+  /// [context] adalah BuildContext untuk menampilkan dialog
+  /// [splitId] adalah ID unik dari split yang akan dihapus
+  /// [splitName] adalah nama split yang akan dihapus
   Future<void> _showDeleteConfirmation(
       BuildContext context, String splitId, String splitName) async {
     return showDialog(
@@ -48,11 +53,17 @@ class ExercisePageView extends GetView<ExercisePageController> {
     );
   }
 
+  /// Menampilkan dialog untuk mengedit detail latihan
+  /// [context] adalah BuildContext untuk menampilkan dialog
+  /// [split] adalah dokumen split yang berisi latihan
+  /// [day] adalah hari latihan yang dipilih
+  /// [workoutDetail] adalah detail latihan yang akan diedit
   void _showEditWorkoutDialog(BuildContext context, DocumentSnapshot split,
       String day, Map<String, dynamic> workoutDetail) {
     // Add null checks and default values
     final workoutId = workoutDetail['workoutId'] as String?;
     if (workoutId == null) {
+      // ignore: avoid_print
       print('Error: workoutId is null');
       return;
     }
@@ -77,7 +88,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
             TextField(
               controller: sets,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Sets',
                 border: OutlineInputBorder(),
               ),
@@ -86,7 +97,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
             TextField(
               controller: reps,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Reps',
                 border: OutlineInputBorder(),
               ),
@@ -94,8 +105,9 @@ class ExercisePageView extends GetView<ExercisePageController> {
             const SizedBox(height: AppSizes.spaceSmall),
             TextField(
               controller: weight,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
                 labelText: 'Weight (kg)',
                 border: OutlineInputBorder(),
               ),
@@ -104,7 +116,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
             TextField(
               controller: restTime,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Rest Time (seconds)',
                 border: OutlineInputBorder(),
               ),
@@ -146,6 +158,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
 
                 Get.back();
               } catch (e) {
+                // ignore: avoid_print
                 print('Error updating workout: $e');
                 Get.snackbar(
                   'Error',
@@ -154,7 +167,8 @@ class ExercisePageView extends GetView<ExercisePageController> {
                 );
               }
             },
-            child: Text('Save', style: TextStyle(color: AppColors.accentGreen)),
+            child: const Text('Save',
+                style: TextStyle(color: AppColors.accentGreen)),
           ),
         ],
       ),
@@ -180,7 +194,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
           Container(
             margin: const EdgeInsets.only(right: AppSizes.spaceMedium),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.fitness_center,
                 color: AppColors.accentGreen,
               ),
@@ -191,6 +205,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
       ),
       body: Container(
         decoration: BoxDecoration(
+          // Membuat gradient background dari atas kiri ke bawah kanan
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -201,18 +216,21 @@ class ExercisePageView extends GetView<ExercisePageController> {
           ),
         ),
         child: StreamBuilder(
+          // Mengambil data split workout pengguna dari Firestore secara real-time
           stream: FirebaseFirestore.instance
               .collection('users_splits')
               .where('userId',
                   isEqualTo: FirebaseAuth.instance.currentUser?.uid)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            // Menampilkan loading indicator saat data belum tersedia
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(color: AppColors.accentGreen),
               );
             }
 
+            // Menampilkan pesan ketika tidak ada split workout
             if (snapshot.data!.docs.isEmpty) {
               return Center(
                 child: Column(
@@ -236,6 +254,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
               );
             }
 
+            // Menampilkan daftar split workout dalam bentuk ListView
             return ListView.builder(
               padding: const EdgeInsets.only(
                 top: kToolbarHeight + 40,
@@ -247,6 +266,10 @@ class ExercisePageView extends GetView<ExercisePageController> {
                 final schedule = split['schedule'] as Map<String, dynamic>;
 
                 return Container(
+                  // Komponen utama yang menampilkan:
+                  // 1. Header split workout dengan nama dan tombol aksi
+                  // 2. Daftar hari latihan
+                  // 3. Detail latihan untuk setiap hari
                   margin: const EdgeInsets.symmetric(
                     horizontal: AppSizes.spaceMedium,
                     vertical: AppSizes.spaceSmall,
@@ -323,7 +346,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
                                     Container(
                                       width: 32,
                                       height: 32,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         color: AppColors.accentGreen,
                                         shape: BoxShape.circle,
                                       ),
@@ -497,7 +520,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
                             ],
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
                 );
@@ -506,6 +529,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
           },
         ),
       ),
+      // Floating Action Button untuk menambah split workout baru
       floatingActionButton: Padding(
         padding:
             const EdgeInsets.only(bottom: 80), // Add padding to lift the FAB
@@ -525,9 +549,9 @@ class ExercisePageView extends GetView<ExercisePageController> {
           ),
           child: FloatingActionButton(
             onPressed: () => Get.to(() => AddSplitView()),
-            child: const Icon(Icons.add),
             backgroundColor: Colors.transparent,
             elevation: 0,
+            child: const Icon(Icons.add),
           ),
         ),
       ),

@@ -8,14 +8,20 @@ import '../constants/app_colors.dart';
 import '../constants/app_styles.dart';
 import '../constants/app_sizes.dart';
 
+/// Widget untuk menampilkan grafik progress latihan pengguna.
+/// Menampilkan perubahan total berat beban selama 30 hari terakhir.
 class ProgressTracker extends StatefulWidget {
-  const ProgressTracker({Key? key}) : super(key: key);
+  const ProgressTracker({super.key});
 
   @override
   State<ProgressTracker> createState() => _ProgressTrackerState();
 }
 
 class _ProgressTrackerState extends State<ProgressTracker> {
+  /// Mengambil riwayat berat beban dari Firestore.
+  ///
+  /// Mengembalikan List berisi data historis berat beban untuk 30 entri terakhir.
+  /// Data difilter untuk hanya mengambil workout yang sudah selesai.
   Future<List<Map<String, dynamic>>> _fetchWeightHistory() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return [];
@@ -29,6 +35,7 @@ class _ProgressTrackerState extends State<ProgressTracker> {
           .limit(30)
           .get();
 
+      // ignore: avoid_print
       print('Fetching from weight_history collection');
 
       final List<Map<String, dynamic>> history = snapshots.docs
@@ -41,13 +48,17 @@ class _ProgressTrackerState extends State<ProgressTracker> {
                   false)) // Filter completed workouts in memory
           .toList();
 
+      // ignore: avoid_print
       print('Fetched ${history.length} weight records');
+      // ignore: avoid_function_literals_in_foreach_calls
       history.forEach((record) {
+        // ignore: avoid_print
         print('Weight: ${record['totalWeight']}, Date: ${record['timestamp']}');
       });
 
       return history;
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching weight history: $e');
       // If the above query fails, try an even simpler query
       try {
@@ -74,12 +85,17 @@ class _ProgressTrackerState extends State<ProgressTracker> {
 
         return history.take(30).toList(); // Limit to 30 records
       } catch (e2) {
+        // ignore: avoid_print
         print('Error with fallback query: $e2');
         rethrow;
       }
     }
   }
 
+  /// Menghitung total berat beban untuk suatu split workout.
+  ///
+  /// [splitId] adalah ID unik dari split workout yang akan dihitung.
+  /// Mengembalikan total berat dalam kilogram.
   Future<double> _calculateTotalWeight(String splitId) async {
     final splitDoc = await FirebaseFirestore.instance
         .collection('users_splits')
@@ -100,6 +116,10 @@ class _ProgressTrackerState extends State<ProgressTracker> {
     return totalWeight;
   }
 
+  /// Mencatat perubahan berat beban ke Firestore.
+  ///
+  /// [splitId] adalah ID dari split workout yang dicatat.
+  /// Data disimpan dengan timestamp server untuk tracking yang akurat.
   Future<void> _recordWeightChange(String splitId) async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
@@ -120,7 +140,7 @@ class _ProgressTrackerState extends State<ProgressTracker> {
       future: _fetchWeightHistory(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(color: AppColors.accentGreen),
           );
         }
@@ -150,12 +170,18 @@ class _ProgressTrackerState extends State<ProgressTracker> {
     );
   }
 
+  /// Membangun grafik progress menggunakan fl_chart.
+  ///
+  /// [history] adalah List berisi data historis berat beban.
+  /// Menampilkan grafik garis dengan tooltip yang menunjukkan tanggal dan berat.
   Widget _buildProgressChart(List<Map<String, dynamic>> history) {
     // Debug print for chart data
+    // ignore: avoid_print
     print('Building chart with ${history.length} points');
 
     final spots = history.asMap().entries.map((entry) {
       final weight = entry.value['totalWeight'].toDouble();
+      // ignore: avoid_print
       print('Chart point ${entry.key}: $weight kg');
       return FlSpot(entry.key.toDouble(), weight);
     }).toList();
@@ -164,8 +190,8 @@ class _ProgressTrackerState extends State<ProgressTracker> {
       padding: const EdgeInsets.all(AppSizes.spaceSmall),
       child: LineChart(
         LineChartData(
-          gridData: FlGridData(show: false),
-          titlesData: FlTitlesData(
+          gridData: const FlGridData(show: false),
+          titlesData: const FlTitlesData(
             leftTitles: AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),

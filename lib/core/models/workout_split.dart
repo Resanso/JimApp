@@ -1,8 +1,22 @@
+/// Model untuk menyimpan jadwal latihan (workout split)
+///
+/// Kelas ini mengatur bagaimana latihan dibagi dalam setiap hari
+/// dan menyimpan detail dari setiap latihan yang dijadwalkan
 class WorkoutSplit {
+  /// ID unik untuk workout split
   final String id;
+
+  /// Nama dari workout split (contoh: "Push Pull Legs", "Upper Lower", dll)
   final String name;
+
+  /// Jadwal latihan yang berisi mapping hari ke daftar detail latihan
+  /// Key: nama hari, Value: list detail latihan
   final Map<String, List<WorkoutDetails>> schedule;
+
+  /// ID pengguna yang memiliki workout split ini
   final String userId;
+
+  /// Waktu pembuatan workout split
   final DateTime createdAt;
 
   WorkoutSplit({
@@ -13,6 +27,7 @@ class WorkoutSplit {
     required this.createdAt,
   });
 
+  /// Mengubah objek WorkoutSplit menjadi Map untuk keperluan JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -24,6 +39,7 @@ class WorkoutSplit {
     };
   }
 
+  /// Membuat objek WorkoutSplit dari Map JSON
   factory WorkoutSplit.fromJson(Map<String, dynamic> json) {
     Map<String, List<WorkoutDetails>> scheduleMap = {};
     (json['schedule'] as Map<String, dynamic>).forEach((key, value) {
@@ -41,12 +57,24 @@ class WorkoutSplit {
   }
 }
 
+/// Model untuk menyimpan detail dari setiap latihan
+///
+/// Berisi informasi seperti jumlah set, repetisi, berat beban, dan waktu istirahat
 class WorkoutDetails {
+  /// ID latihan yang direferensikan
   final String workoutId;
+
+  /// Jumlah set yang harus dilakukan
   final int sets;
+
+  /// Jumlah pengulangan per set
   final int reps;
+
+  /// Berat beban dalam kilogram
   final double weight;
-  final int restTime; // in seconds
+
+  /// Waktu istirahat dalam detik antara set
+  final int restTime;
 
   WorkoutDetails({
     required this.workoutId,
@@ -56,6 +84,7 @@ class WorkoutDetails {
     required this.restTime,
   });
 
+  /// Mengubah objek WorkoutDetails menjadi Map untuk keperluan JSON
   Map<String, dynamic> toJson() {
     return {
       'workoutId': workoutId,
@@ -66,6 +95,7 @@ class WorkoutDetails {
     };
   }
 
+  /// Membuat objek WorkoutDetails dari Map JSON
   factory WorkoutDetails.fromJson(Map<String, dynamic> json) {
     return WorkoutDetails(
       workoutId: json['workoutId'],
@@ -77,7 +107,12 @@ class WorkoutDetails {
   }
 }
 
+/// Extension untuk menambah fungsionalitas pada WorkoutSplit
 extension WorkoutSplitUtils on WorkoutSplit {
+  /// Menghitung total berat beban yang diangkat dalam satu sesi workout split
+  ///
+  /// Rumus: berat * jumlah set * jumlah repetisi
+  /// @return total berat dalam kilogram
   double calculateTotalWeight() {
     double totalWeight = 0;
     schedule.forEach((day, workouts) {

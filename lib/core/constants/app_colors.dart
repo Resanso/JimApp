@@ -44,8 +44,10 @@ class AppColors {
   static const Color dividerColor = darkGrey;
   static const Color buttonDisabled = mediumGrey;
 
+  // ignore: prefer_typing_uninitialized_variables
   static var primaryLight;
 
+  // ignore: prefer_typing_uninitialized_variables
   static var accentBlue;
 }
 

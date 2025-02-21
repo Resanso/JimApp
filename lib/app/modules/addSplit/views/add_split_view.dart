@@ -7,7 +7,14 @@ import 'package:jim/core/constants/app_sizes.dart';
 import 'package:jim/core/models/workout_split.dart';
 import '../controllers/add_split_controller.dart';
 
+/// Widget AddSplitView digunakan untuk membuat dan mengatur jadwal latihan (split).
+/// Widget ini memungkinkan pengguna untuk:
+/// - Membuat nama split
+/// - Memilih latihan untuk setiap hari dalam seminggu
+/// - Mengatur detail latihan (set, repetisi, berat, dan waktu istirahat)
+// ignore: use_key_in_widget_constructors
 class AddSplitView extends GetView<AddSplitController> {
+  @override
   final AddSplitController controller = Get.put(AddSplitController());
 
   @override
@@ -25,7 +32,7 @@ class AddSplitView extends GetView<AddSplitController> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.edit, color: AppColors.accentGreen),
+            icon: const Icon(Icons.edit, color: AppColors.accentGreen),
             onPressed: () => _showSplitNameDialog(context),
           ),
         ],
@@ -46,7 +53,7 @@ class AddSplitView extends GetView<AddSplitController> {
             children: [
               GridView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(AppSizes.spaceMedium),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount:
@@ -67,7 +74,7 @@ class AddSplitView extends GetView<AddSplitController> {
                   );
                 },
               ),
-              SizedBox(height: 80), // Space for FAB
+              const SizedBox(height: 80), // Space for FAB
             ],
           ),
         ),
@@ -91,7 +98,7 @@ class AddSplitView extends GetView<AddSplitController> {
         ),
         child: FloatingActionButton.extended(
           onPressed: () => controller.saveSplit(),
-          icon: Icon(Icons.save_rounded, color: Colors.white),
+          icon: const Icon(Icons.save_rounded, color: Colors.white),
           label: Text('Save Split',
               style: AppStyles.button.copyWith(color: Colors.white)),
           backgroundColor: Colors.transparent,
@@ -102,6 +109,9 @@ class AddSplitView extends GetView<AddSplitController> {
     );
   }
 
+  /// Membuat kartu untuk setiap hari yang menampilkan latihan yang dipilih
+  /// [context] - BuildContext untuk mengakses tema dan media query
+  /// [day] - String yang merepresentasikan nama hari
   Widget _buildDayCard(BuildContext context, String day) {
     return Card(
       color: AppColors.secondaryDark,
@@ -117,7 +127,7 @@ class AddSplitView extends GetView<AddSplitController> {
         onTap: () => _showWorkoutSelectionDialog(context, day),
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: EdgeInsets.all(AppSizes.spaceSmall),
+          padding: const EdgeInsets.all(AppSizes.spaceSmall),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -126,7 +136,7 @@ class AddSplitView extends GetView<AddSplitController> {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: AppSizes.spaceSmall,
                         vertical: 4,
                       ),
@@ -144,12 +154,12 @@ class AddSplitView extends GetView<AddSplitController> {
                       ),
                     ),
                   ),
-                  SizedBox(width: AppSizes.spaceSmall),
+                  const SizedBox(width: AppSizes.spaceSmall),
                   Obx(() {
                     final workoutCount =
                         controller.selectedWorkouts[day]?.length ?? 0;
                     return Container(
-                      padding: EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: workoutCount > 0
                             ? AppColors.accentGreen
@@ -183,8 +193,8 @@ class AddSplitView extends GetView<AddSplitController> {
                             color: AppColors.accentGreen.withOpacity(0.5),
                             size: 24,
                           ),
-                          SizedBox(height: 4),
-                          Text(
+                          const SizedBox(height: 4),
+                          const Text(
                             'Add Workouts',
                             style: TextStyle(
                               color: Colors.white70,
@@ -198,7 +208,7 @@ class AddSplitView extends GetView<AddSplitController> {
                   }
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: selectedWorkouts.length,
                     itemBuilder: (context, index) =>
                         _buildWorkoutItem(day, selectedWorkouts[index]),
@@ -212,6 +222,9 @@ class AddSplitView extends GetView<AddSplitController> {
     );
   }
 
+  /// Membuat item latihan individual dalam kartu hari
+  /// [day] - Nama hari
+  /// [workout] - Detail latihan yang dipilih
   Widget _buildWorkoutItem(String day, WorkoutDetails workout) {
     return FutureBuilder(
       future: FirebaseFirestore.instance
@@ -219,10 +232,10 @@ class AddSplitView extends GetView<AddSplitController> {
           .doc(workout.workoutId)
           .get(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return SizedBox();
+        if (!snapshot.hasData) return const SizedBox();
         final workoutData = snapshot.data!;
         return Container(
-          margin: EdgeInsets.only(bottom: 4),
+          margin: const EdgeInsets.only(bottom: 4),
           child: Row(
             children: [
               Expanded(
@@ -241,9 +254,9 @@ class AddSplitView extends GetView<AddSplitController> {
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.edit, size: 14),
-                padding: EdgeInsets.all(4),
-                constraints: BoxConstraints(),
+                icon: const Icon(Icons.edit, size: 14),
+                padding: const EdgeInsets.all(4),
+                constraints: const BoxConstraints(),
                 onPressed: () => _showWorkoutDetailsDialog(
                   context,
                   day,
@@ -258,6 +271,8 @@ class AddSplitView extends GetView<AddSplitController> {
     );
   }
 
+  /// Menampilkan dialog untuk mengubah nama split
+  /// [context] - BuildContext untuk menampilkan dialog
   void _showSplitNameDialog(BuildContext context) {
     // Prevent multiple dialogs
     if (Get.isDialogOpen ?? false) return;
@@ -275,15 +290,15 @@ class AddSplitView extends GetView<AddSplitController> {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Name your split',
                     style: AppStyles.heading3, textAlign: TextAlign.center),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
                     color: AppColors.primaryDark,
                     borderRadius: BorderRadius.circular(8),
@@ -291,8 +306,8 @@ class AddSplitView extends GetView<AddSplitController> {
                   child: TextFormField(
                     controller: textController,
                     autofocus: true,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
                       hintText: 'Enter split name',
                       hintStyle: TextStyle(color: Colors.grey),
                       border: InputBorder.none,
@@ -306,7 +321,7 @@ class AddSplitView extends GetView<AddSplitController> {
                     },
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     if (Get.isDialogOpen ?? false) Get.back();
@@ -317,7 +332,7 @@ class AddSplitView extends GetView<AddSplitController> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     child: Text(
                       'Done',
@@ -334,17 +349,20 @@ class AddSplitView extends GetView<AddSplitController> {
     );
   }
 
+  /// Menampilkan dialog untuk memilih latihan yang tersedia
+  /// [context] - BuildContext untuk menampilkan dialog
+  /// [day] - Hari yang sedang diedit
   void _showWorkoutSelectionDialog(BuildContext context, String day) {
     Get.dialog(
       Dialog(
         backgroundColor: AppColors.primaryDark,
-        child: Container(
+        child: SizedBox(
           width: double.maxFinite,
           height: Get.height * 0.8,
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(AppSizes.spaceMedium),
+                padding: const EdgeInsets.all(AppSizes.spaceMedium),
                 child:
                     Text('Select workouts for $day', style: AppStyles.heading3),
               ),
@@ -355,11 +373,11 @@ class AddSplitView extends GetView<AddSplitController> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     return ListView.builder(
-                      padding: EdgeInsets.all(AppSizes.spaceSmall),
+                      padding: const EdgeInsets.all(AppSizes.spaceSmall),
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         final workout = snapshot.data!.docs[index];
@@ -371,8 +389,8 @@ class AddSplitView extends GetView<AddSplitController> {
                             color: isSelected
                                 ? AppColors.accentGreen.withOpacity(0.2)
                                 : AppColors.secondaryDark,
-                            margin:
-                                EdgeInsets.only(bottom: AppSizes.spaceSmall),
+                            margin: const EdgeInsets.only(
+                                bottom: AppSizes.spaceSmall),
                             child: InkWell(
                               onTap: () {
                                 _showWorkoutDetailsDialog(
@@ -383,7 +401,8 @@ class AddSplitView extends GetView<AddSplitController> {
                                 );
                               },
                               child: Padding(
-                                padding: EdgeInsets.all(AppSizes.spaceSmall),
+                                padding:
+                                    const EdgeInsets.all(AppSizes.spaceSmall),
                                 child: Row(
                                   children: [
                                     if (workout['image'] != null)
@@ -397,7 +416,7 @@ class AddSplitView extends GetView<AddSplitController> {
                                           fit: BoxFit.cover,
                                         ),
                                       ),
-                                    SizedBox(width: AppSizes.spaceSmall),
+                                    const SizedBox(width: AppSizes.spaceSmall),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -431,7 +450,7 @@ class AddSplitView extends GetView<AddSplitController> {
               ),
               TextButton(
                 onPressed: () => Get.back(),
-                child: Text('Done',
+                child: const Text('Done',
                     style: TextStyle(color: AppColors.accentGreen)),
               ),
             ],
@@ -441,6 +460,11 @@ class AddSplitView extends GetView<AddSplitController> {
     );
   }
 
+  /// Menampilkan dialog untuk mengatur detail latihan
+  /// [context] - BuildContext untuk menampilkan dialog
+  /// [day] - Hari yang sedang diedit
+  /// [workoutId] - ID latihan yang dipilih
+  /// [workout] - Data latihan dari Firestore
   void _showWorkoutDetailsDialog(BuildContext context, String day,
       String workoutId, DocumentSnapshot workout) {
     final sets = TextEditingController(text: '3');
@@ -460,7 +484,7 @@ class AddSplitView extends GetView<AddSplitController> {
             TextField(
               controller: sets,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Sets',
                 border: OutlineInputBorder(),
               ),
@@ -469,7 +493,7 @@ class AddSplitView extends GetView<AddSplitController> {
             TextField(
               controller: reps,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Reps',
                 border: OutlineInputBorder(),
               ),
@@ -477,8 +501,9 @@ class AddSplitView extends GetView<AddSplitController> {
             const SizedBox(height: AppSizes.spaceSmall),
             TextField(
               controller: weight,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
                 labelText: 'Weight (kg)',
                 border: OutlineInputBorder(),
               ),
@@ -487,7 +512,7 @@ class AddSplitView extends GetView<AddSplitController> {
             TextField(
               controller: restTime,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Rest Time (seconds)',
                 border: OutlineInputBorder(),
               ),
@@ -512,7 +537,8 @@ class AddSplitView extends GetView<AddSplitController> {
               // Only close the current dialog, not all overlays
               Get.back();
             },
-            child: Text('Add', style: TextStyle(color: AppColors.accentGreen)),
+            child: const Text('Add',
+                style: TextStyle(color: AppColors.accentGreen)),
           ),
         ],
       ),

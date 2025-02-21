@@ -6,20 +6,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:jim/core/controllers/anatomy_controller.dart';
 import 'package:jim/core/models/workout_split.dart';
 
+/// Controller untuk mengelola halaman latihan (exercise)
+/// Mengatur alur latihan, waktu istirahat, dan pencatatan progress
 class DoExerciseController extends GetxController {
+  /// ID dari split workout yang sedang dijalankan
   final String splitId;
+
+  /// Data workout yang akan dijalankan
   final Map<String, dynamic> workouts;
 
   DoExerciseController({required this.splitId, required this.workouts});
 
+  /// Menyimpan hari latihan saat ini
   final currentDay = ''.obs;
+
+  /// Indeks workout yang sedang dijalankan
   final currentWorkoutIndex = 0.obs;
+
+  /// Set latihan saat ini
   final currentSet = 1.obs;
+
+  /// Status apakah workout sudah selesai
   final isWorkoutComplete = false.obs;
 
+  /// Nama latihan yang sedang dilakukan
   final currentExerciseName = ''.obs;
+
+  /// URL gambar untuk latihan saat ini
   final currentExerciseImage = ''.obs;
+
+  /// Otot target yang dilatih
   final currentTargetMuscles = ''.obs;
+
+  /// Gerakan yang dilakukan dalam latihan
   final currentMovements = ''.obs;
 
   final _completedMuscles = <String>[].obs;
@@ -41,6 +60,8 @@ class DoExerciseController extends GetxController {
 
   late Timer? _restTimer;
 
+  /// Inisialisasi awal controller
+  /// Dipanggil saat controller pertama kali dibuat
   @override
   void onInit() {
     super.onInit();
@@ -48,12 +69,15 @@ class DoExerciseController extends GetxController {
     _initializeWorkout();
   }
 
+  /// Membersihkan timer saat controller dihapus
   @override
   void onClose() {
     _restTimer?.cancel();
     super.onClose();
   }
 
+  /// Menginisialisasi workout berdasarkan hari
+  /// Mengatur workout sesuai dengan hari saat ini atau hari pertama yang tersedia
   void _initializeWorkout() {
     final today = DateTime.now().weekday;
     final days = workouts.keys.toList();
@@ -67,6 +91,9 @@ class DoExerciseController extends GetxController {
     _loadCurrentExercise();
   }
 
+  /// Mengkonversi nama hari menjadi angka
+  /// @param day Nama hari dalam bahasa Inggris
+  /// @return Nomor hari (1-7, Senin-Minggu)
   int _getDayNumber(String day) {
     final days = {
       'Monday': 1,
@@ -80,6 +107,8 @@ class DoExerciseController extends GetxController {
     return days[day] ?? 1;
   }
 
+  /// Memuat data latihan yang sedang aktif
+  /// Mengambil detail latihan dari Firestore dan memperbarui UI
   Future<void> _loadCurrentExercise() async {
     final workoutList = (workouts[currentDay.value] as List)
         .map((item) {
@@ -136,6 +165,8 @@ class DoExerciseController extends GetxController {
     }
   }
 
+  /// Menandai set latihan selesai
+  /// Memulai waktu istirahat atau pindah ke latihan berikutnya
   void completeSet() async {
     final dayWorkouts = workouts[currentDay.value] as List;
     final currentWorkout =
@@ -150,6 +181,8 @@ class DoExerciseController extends GetxController {
     }
   }
 
+  /// Memulai waktu istirahat
+  /// Menghitung mundur waktu istirahat yang ditentukan
   void startRest() {
     isResting.value = true;
     restTimeRemaining.value = currentRestTime.value;
@@ -165,6 +198,8 @@ class DoExerciseController extends GetxController {
     });
   }
 
+  /// Melewati waktu istirahat
+  /// Langsung melanjutkan ke set berikutnya
   void skipRest() {
     if (isResting.value) {
       _restTimer?.cancel();
@@ -173,6 +208,8 @@ class DoExerciseController extends GetxController {
     }
   }
 
+  /// Menyimpan data otot yang telah dilatih ke Firestore
+  /// Digunakan untuk tracking progress mingguan
   Future<void> _saveTrainedMuscles() async {
     try {
       final userId = _auth.currentUser?.uid;
@@ -214,16 +251,20 @@ class DoExerciseController extends GetxController {
         });
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error saving trained muscles: $e');
     }
   }
 
+  /// Mencatat progress latihan ke Firestore
+  /// Menyimpan total berat dan detail latihan yang telah diselesaikan
   Future<void> _recordProgress() async {
     try {
       final userId = _auth.currentUser?.uid;
       if (userId == null) return;
 
       if (!isWorkoutComplete.value) {
+        // ignore: avoid_print
         print('Workout not complete, skipping progress recording');
         return;
       }
@@ -232,7 +273,9 @@ class DoExerciseController extends GetxController {
       double totalWeight = 0;
       final dayWorkouts = workouts[currentDay.value] as List;
 
+      // ignore: avoid_print
       print('Recording workout for day: ${currentDay.value}');
+      // ignore: avoid_print
       print('Number of exercises: ${dayWorkouts.length}');
 
       for (var workout in dayWorkouts) {
@@ -243,12 +286,16 @@ class DoExerciseController extends GetxController {
           final exerciseTotal = sets * reps * weight;
           totalWeight += exerciseTotal;
 
+          // ignore: avoid_print
           print('Exercise: ${workout['workoutId']}');
+          // ignore: avoid_print
           print('Sets: $sets, Reps: $reps, Weight: $weight');
+          // ignore: avoid_print
           print('Exercise total: $exerciseTotal kg');
         }
       }
 
+      // ignore: avoid_print
       print('Total weight for all exercises: $totalWeight kg');
 
       // Record to weight_history collection
@@ -262,12 +309,16 @@ class DoExerciseController extends GetxController {
         'workoutDetails': workouts[currentDay.value],
       });
 
+      // ignore: avoid_print
       print('Progress successfully recorded to weight_history');
     } catch (e) {
+      // ignore: avoid_print
       print('Error recording progress: $e');
     }
   }
 
+  /// Memperbarui tampilan anatomi
+  /// Menampilkan otot yang telah dilatih pada model anatomi
   void _updateAnatomyView() async {
     await _saveTrainedMuscles();
     _anatomyController.setTrainedMuscles(_completedMuscles);

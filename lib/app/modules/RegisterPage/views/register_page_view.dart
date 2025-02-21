@@ -5,7 +5,13 @@ import 'package:jim/core/constants/app_colors.dart';
 import 'package:jim/core/constants/app_styles.dart';
 import '../controllers/register_page_controller.dart';
 
+/// Widget untuk menampilkan halaman registrasi
+///
+/// Halaman ini memungkinkan pengguna untuk membuat akun baru dengan
+/// memasukkan nama, email, dan password
 class RegisterPageView extends GetView<RegisterPageController> {
+  const RegisterPageView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,19 +24,21 @@ class RegisterPageView extends GetView<RegisterPageController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
-                // Lottie Animation
+                // Animasi Lottie sebagai ilustrasi
                 Lottie.asset(
                   'assets/lottie.json',
                   height: 200,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 40),
+                // Judul halaman
                 Text(
                   'Create Account',
                   style: AppStyles.heading1.copyWith(
                     color: AppColors.accentRed,
                   ),
                 ),
+                // Subtitle halaman
                 const SizedBox(height: 8),
                 Text(
                   'Start your fitness journey today',
@@ -38,7 +46,7 @@ class RegisterPageView extends GetView<RegisterPageController> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
-                // Name field
+                // Input field untuk nama pengguna
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
@@ -54,17 +62,17 @@ class RegisterPageView extends GetView<RegisterPageController> {
                   child: TextField(
                     controller: controller.nameController,
                     style: AppStyles.body1,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your name',
                       prefixIcon:
                           Icon(Icons.person, color: AppColors.accentRed),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: EdgeInsets.all(16),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Email field
+                // Input field untuk email
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
@@ -80,16 +88,16 @@ class RegisterPageView extends GetView<RegisterPageController> {
                   child: TextField(
                     controller: controller.emailController,
                     style: AppStyles.body1,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your email',
                       prefixIcon: Icon(Icons.email, color: AppColors.accentRed),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: EdgeInsets.all(16),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Password field
+                // Input field untuk password
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
@@ -105,16 +113,17 @@ class RegisterPageView extends GetView<RegisterPageController> {
                   child: TextField(
                     controller: controller.passwordController,
                     style: AppStyles.body1,
-                    obscureText: true,
-                    decoration: InputDecoration(
+                    obscureText: true, // Menyembunyikan teks password
+                    decoration: const InputDecoration(
                       hintText: 'Create password',
                       prefixIcon: Icon(Icons.lock, color: AppColors.accentRed),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: EdgeInsets.all(16),
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
+                // Menampilkan pesan error jika ada
                 Obx(() => controller.errorMessage.value.isNotEmpty
                     ? Container(
                         padding: const EdgeInsets.all(8),
@@ -124,12 +133,13 @@ class RegisterPageView extends GetView<RegisterPageController> {
                         ),
                         child: Text(
                           controller.errorMessage.value,
-                          style: TextStyle(color: AppColors.accentRed),
+                          style: const TextStyle(color: AppColors.accentRed),
                           textAlign: TextAlign.center,
                         ),
                       )
                     : const SizedBox()),
                 const SizedBox(height: 32),
+                // Tombol Register dengan indikator loading
                 SizedBox(
                   width: double.infinity,
                   child: Obx(() => ElevatedButton(
@@ -157,6 +167,7 @@ class RegisterPageView extends GetView<RegisterPageController> {
                       )),
                 ),
                 const SizedBox(height: 16),
+                // Tombol untuk beralih ke halaman login
                 TextButton(
                   onPressed: () => Get.back(),
                   child: Text(

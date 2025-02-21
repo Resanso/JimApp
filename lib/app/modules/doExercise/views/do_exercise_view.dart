@@ -5,6 +5,14 @@ import 'package:jim/core/constants/app_styles.dart';
 import 'package:jim/core/constants/app_sizes.dart';
 import '../controllers/do_exercise_controller.dart';
 
+/// Widget untuk menampilkan dan mengelola latihan yang sedang dilakukan.
+///
+/// View ini menangani:
+/// - Tampilan latihan aktif
+/// - Tampilan waktu istirahat
+/// - Tampilan selesai latihan
+/// - Progress bar latihan
+/// - Detail latihan seperti set, repetisi, dan berat
 class DoExerciseView extends GetView<DoExerciseController> {
   final String splitId;
   final Map<String, dynamic> workouts;
@@ -12,8 +20,8 @@ class DoExerciseView extends GetView<DoExerciseController> {
   const DoExerciseView({
     required this.splitId,
     required this.workouts,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,19 +59,19 @@ class DoExerciseView extends GetView<DoExerciseController> {
         return Stack(
           children: [
             // Progress bar at the top
-            Container(
+            SizedBox(
               height: 4,
               child: Obx(() => LinearProgressIndicator(
                     value: controller.workoutProgress.value,
                     backgroundColor: Colors.grey[800],
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(AppColors.accentGreen),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                        AppColors.accentGreen),
                   )),
             ),
             Column(
               children: [
                 if (controller.currentExerciseImage.value.isNotEmpty)
-                  Container(
+                  SizedBox(
                     height: 250,
                     width: double.infinity,
                     child: Stack(
@@ -74,7 +82,7 @@ class DoExerciseView extends GetView<DoExerciseController> {
                           fit: BoxFit.cover,
                         ),
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -112,9 +120,11 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget untuk menampilkan tampilan setelah latihan selesai.
+  /// Menampilkan animasi check mark dan tombol untuk kembali.
   Widget _buildCompletionView() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -171,9 +181,11 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget untuk menampilkan tampilan saat waktu istirahat.
+  /// Menampilkan countdown timer dan informasi latihan berikutnya.
   Widget _buildRestingView() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -241,6 +253,8 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget untuk menampilkan statistik latihan saat ini.
+  /// Termasuk informasi set, repetisi, berat, dan waktu istirahat.
   Widget _buildExerciseStats() {
     return Container(
       padding: const EdgeInsets.all(AppSizes.spaceMedium),
@@ -264,6 +278,9 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget helper untuk membuat kolom statistik individual.
+  /// [label] adalah label statistik (contoh: "Set", "Reps")
+  /// [value] adalah nilai statistik yang ditampilkan
   Widget _buildStatColumn(String label, String value) {
     return Column(
       children: [
@@ -280,6 +297,8 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget untuk menampilkan detail lengkap latihan.
+  /// Termasuk target otot dan instruksi gerakan.
   Widget _buildExerciseDetails() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,6 +318,10 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget helper untuk membuat bagian detail dengan judul dan konten.
+  /// [title] adalah judul bagian
+  /// [content] adalah isi/deskripsi
+  /// [icon] adalah ikon yang ditampilkan di sebelah judul
   Widget _buildDetailSection(String title, String content, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(AppSizes.spaceMedium),
@@ -326,6 +349,8 @@ class DoExerciseView extends GetView<DoExerciseController> {
     );
   }
 
+  /// Widget untuk menampilkan panel aksi di bagian bawah layar.
+  /// Berisi informasi set saat ini dan tombol untuk menyelesaikan set.
   Widget _buildActionPanel() {
     return Container(
       padding: const EdgeInsets.all(AppSizes.spaceMedium),

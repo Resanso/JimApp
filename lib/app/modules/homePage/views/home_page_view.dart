@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:jim/core/constants/app_colors.dart';
 import 'package:jim/core/constants/app_styles.dart';
 import 'package:jim/core/controllers/anatomy_controller.dart';
@@ -9,11 +7,16 @@ import 'package:jim/core/widgets/anatomy.dart';
 import 'package:jim/core/widgets/progress.dart';
 import '../controllers/home_page_controller.dart';
 
+/// HomePageView adalah widget utama yang menampilkan halaman beranda aplikasi.
+/// Widget ini menggunakan GetX untuk manajemen state dan menampilkan beberapa
+/// bagian utama seperti profil pengguna, kutipan motivasi, progress mingguan,
+/// dan grafik perkembangan berat badan.
 class HomePageView extends GetView<HomePageController> {
-  const HomePageView({Key? key}) : super(key: key);
+  const HomePageView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Controller untuk mengatur tampilan anatomi otot
     final anatomyController = Get.find<AnatomyController>();
 
     return Scaffold(
@@ -25,7 +28,8 @@ class HomePageView extends GetView<HomePageController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with Profile
+                // Bagian Header dengan Profil
+                // Menampilkan pesan sambutan dan avatar pengguna
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -39,7 +43,7 @@ class HomePageView extends GetView<HomePageController> {
                         ),
                       ],
                     ),
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 24,
                       backgroundColor: AppColors.accentRed,
                       child:
@@ -48,12 +52,13 @@ class HomePageView extends GetView<HomePageController> {
                   ],
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-                // Motivational Quote Section
+                // Bagian Kutipan Motivasi
+                // Menampilkan kutipan motivasi harian dengan desain yang menarik
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
                     borderRadius: BorderRadius.circular(24),
@@ -61,7 +66,7 @@ class HomePageView extends GetView<HomePageController> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 20,
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
@@ -80,7 +85,7 @@ class HomePageView extends GetView<HomePageController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 6,
                             ),
@@ -96,7 +101,7 @@ class HomePageView extends GetView<HomePageController> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
                             'The only bad workout is the one that didn\'t happen.',
                             style: AppStyles.heading3.copyWith(
@@ -105,7 +110,7 @@ class HomePageView extends GetView<HomePageController> {
                               letterSpacing: 0.5,
                             ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
                               Container(
@@ -116,7 +121,7 @@ class HomePageView extends GetView<HomePageController> {
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 'Fitness Wisdom',
                                 style: AppStyles.body2.copyWith(
@@ -132,12 +137,13 @@ class HomePageView extends GetView<HomePageController> {
                   ),
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-                // Weekly Progress with Muscle Anatomy
+                // Bagian Progress Mingguan dengan Anatomi Otot
+                // Menampilkan visualisasi otot yang telah dilatih dalam seminggu
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
                     borderRadius: BorderRadius.circular(24),
@@ -145,7 +151,7 @@ class HomePageView extends GetView<HomePageController> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 20,
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
@@ -153,11 +159,13 @@ class HomePageView extends GetView<HomePageController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Weekly Progress',
+                        'Muscle work this week',
                         style: AppStyles.heading3
                             .copyWith(color: AppColors.accentGreen),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                      // Widget MuscleAnatomy menampilkan visualisasi otot
+                      // dengan warna yang menunjukkan intensitas latihan
                       AspectRatio(
                         aspectRatio: 1,
                         child: MuscleAnatomy(
@@ -169,12 +177,13 @@ class HomePageView extends GetView<HomePageController> {
                   ),
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-                // Weight Progress Chart
+                // Bagian Grafik Progress Berat Badan
+                // Menampilkan grafik perkembangan berat badan dari waktu ke waktu
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryDark,
                     borderRadius: BorderRadius.circular(24),
@@ -182,7 +191,7 @@ class HomePageView extends GetView<HomePageController> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 20,
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
@@ -194,8 +203,9 @@ class HomePageView extends GetView<HomePageController> {
                         style: AppStyles.heading3
                             .copyWith(color: AppColors.accentRed),
                       ),
-                      SizedBox(height: 20),
-                      AspectRatio(
+                      const SizedBox(height: 20),
+                      // Widget ProgressTracker menampilkan grafik progress
+                      const AspectRatio(
                         aspectRatio: 16 / 9,
                         child: ProgressTracker(),
                       ),

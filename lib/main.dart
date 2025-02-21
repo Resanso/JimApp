@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:jim/app/modules/loginPage/controllers/login_page_controller.dart';
-import 'package:jim/app/modules/loginPage/views/login_page_view.dart';
 import 'package:jim/app/modules/settings/controllers/settings_controller.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -19,27 +18,32 @@ import 'package:jim/app/modules/exercisePage/controllers/exercise_page_controlle
 import 'package:jim/app/routes/app_pages.dart';
 import 'package:jim/app/services/auth_service.dart';
 
+/// Fungsi utama aplikasi yang menginisialisasi semua dependensi yang diperlukan
+/// dan memulai aplikasi Flutter
 void main() async {
+  // Inisialisasi binding Flutter untuk memastikan widget dapat diinisialisasi
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Initialize Firebase
+  /// Inisialisasi Firebase dengan konfigurasi platform yang sesuai
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize Hive
+  /// Inisialisasi Hive untuk penyimpanan lokal
   await AuthService.initialize();
 
-  // Initialize controllers
+  /// Mendaftarkan controller-controller yang akan digunakan secara global
+  /// dengan pengaturan permanent: true agar tidak di-dispose
   Get.put<AnatomyController>(AnatomyController(), permanent: true);
   Get.put<ExercisePageController>(ExercisePageController(), permanent: true);
   Get.put<LoginPageController>(LoginPageController(), permanent: true);
   Get.put<SettingsController>(SettingsController(), permanent: true);
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
+/// Widget utama aplikasi yang mengatur tema dan konfigurasi dasar
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -47,15 +51,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
     return ScreenUtilInit(
-      designSize: const Size(360, 690), // Design size based on your mockup
+      /// Mengatur ukuran desain dasar untuk responsive UI
+      designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'JimApp',
+
+          /// Mengatur rute awal berdasarkan status login pengguna
           initialRoute: AuthService.isLoggedIn() ? Routes.HOME : Routes.LOGIN,
-          getPages: AppPages.routes, // Add the routes configuration
+          getPages: AppPages.routes,
+
+          /// Konfigurasi tema aplikasi
           theme: ThemeData(
             fontFamily: 'PlusJakartaSans', // Font default
             scaffoldBackgroundColor: AppColors.primaryDark, // Warna background
@@ -73,27 +82,37 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// Widget yang menangani tampilan utama dengan navigasi bottom bar
 class MainScreen extends StatelessWidget {
-  MainScreen({Key? key}) : super(key: key); // Add key parameter
+  MainScreen({super.key}); // Add key parameter
 
+  /// Controller untuk mengatur navigasi halaman
   final controller = Get.put(HomePageController());
 
+  /// Daftar halaman yang dapat diakses melalui bottom navigation
   final List<Widget> _pages = [
     const HomePageView(),
     const ExercisePageView(),
-    SettingsView(),
+    const SettingsView(),
   ];
-//bottom bar
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true, // Add this line
+      /// Mengaktifkan body yang dapat extend ke bawah navigation bar
+      extendBody: true,
+
+      /// Menggunakan Obx untuk reaktivitas saat pergantian halaman
       body: Obx(() => _pages[controller.currentIndex.value]),
+
+      /// Bottom navigation bar dengan animasi curved
       bottomNavigationBar: Obx(
         () => Theme(
           data: Theme.of(context).copyWith(
-            iconTheme: IconThemeData(color: AppColors.white),
+            iconTheme: const IconThemeData(color: AppColors.white),
           ),
+
+          /// Menggunakan CurvedNavigationBar untuk tampilan yang menarik
           child: CurvedNavigationBar(
             backgroundColor: Colors.transparent,
             color: AppColors.secondaryDark,
