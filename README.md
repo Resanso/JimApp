@@ -32,38 +32,38 @@ Fitur ini membantu pengguna dalam mengelola rutinitas latihan mereka dengan mela
 - curved_navigation_bar: Untuk tampilan bottom navigation bar yang menarik.
 
 ## Struktur Proyek
-lib/
-├── app/
-│   ├── modules/
-│   │   ├── exercisePage/
-│   │   │   ├── controllers/
-│   │   │   │   └── exercise_page_controller.dart
-│   │   │   └── views/
-│   │   │       └── exercise_page_view.dart
-│   │   ├── homePage/
-│   │   │   ├── controllers/
-│   │   │   │   └── home_page_controller.dart
-│   │   │   └── views/
-│   │   │       └── home_page_view.dart
-│   │   ├── loginPage/
-│   │   │   ├── controllers/
-│   │   │   │   └── login_page_controller.dart
-│   │   ├── settings/
-│   │   │   ├── controllers/
-│   │   │   │   └── settings_controller.dart
-│   │   │   └── views/
-│   │   │       └── settings_view.dart
-│   ├── routes/
-│   │   └── app_pages.dart
-│   ├── services/
-│   │   └── auth_service.dart
-├── core/
-│   ├── constants/
-│   │   ├── app_colors.dart
-│   │   ├── app_styles.dart
-│   ├── controllers/
-│   │   └── anatomy_controller.dart
-├── main.dart
+lib/   
+├── app/   
+│   ├── modules/   
+│   │   ├── exercisePage/   
+│   │   │   ├── controllers/   
+│   │   │   │   └── exercise_page_controller.dart   
+│   │   │   └── views/   
+│   │   │       └── exercise_page_view.dart   
+│   │   ├── homePage/   
+│   │   │   ├── controllers/   
+│   │   │   │   └── home_page_controller.dart   
+│   │   │   └── views/   
+│   │   │       └── home_page_view.dart   
+│   │   ├── loginPage/   
+│   │   │   ├── controllers/   
+│   │   │   │   └── login_page_controller.dart   
+│   │   ├── settings/     
+│   │   │   ├── controllers/         
+│   │   │   │   └── settings_controller.dart       
+│   │   │   └── views/      
+│   │   │       └── settings_view.dart      
+│   ├── routes/       
+│   │   └── app_pages.dart      
+│   ├── services/       
+│   │   └── auth_service.dart       
+├── core/        
+│   ├── constants/       
+│   │   ├── app_colors.dart          
+│   │   ├── app_styles.dart         
+│   ├── controllers/           
+│   │   └── anatomy_controller.dart        
+├── main.dart       
 
 ## Penggunaan :
 ## Muscle Work This Week
