@@ -239,7 +239,7 @@ class ExercisePageView extends GetView<ExercisePageController> {
             return ListView.builder(
               padding: const EdgeInsets.only(
                 top: kToolbarHeight + 40,
-                bottom: 100,
+                bottom: 120, // Increased from 100 to 120 for more space
               ),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, splitIndex) {
@@ -506,25 +506,29 @@ class ExercisePageView extends GetView<ExercisePageController> {
           },
         ),
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.accentRed, AppColors.accentRed.withRed(200)],
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accentRed.withOpacity(0.4),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+      floatingActionButton: Padding(
+        padding:
+            const EdgeInsets.only(bottom: 80), // Add padding to lift the FAB
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.accentRed, AppColors.accentRed.withRed(200)],
             ),
-          ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () => Get.to(() => AddSplitView()),
-          child: const Icon(Icons.add),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accentRed.withOpacity(0.4),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: FloatingActionButton(
+            onPressed: () => Get.to(() => AddSplitView()),
+            child: const Icon(Icons.add),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
         ),
       ),
     );

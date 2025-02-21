@@ -165,6 +165,14 @@ class DoExerciseController extends GetxController {
     });
   }
 
+  void skipRest() {
+    if (isResting.value) {
+      _restTimer?.cancel();
+      isResting.value = false;
+      currentSet.value++;
+    }
+  }
+
   Future<void> _saveTrainedMuscles() async {
     try {
       final userId = _auth.currentUser?.uid;

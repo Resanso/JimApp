@@ -217,6 +217,24 @@ class DoExerciseView extends GetView<DoExerciseController> {
               'Next up: ${controller.nextExerciseName.value}',
               style: AppStyles.body1.copyWith(color: Colors.white70),
             ),
+            const SizedBox(height: AppSizes.spaceLarge),
+            ElevatedButton(
+              onPressed: controller.skipRest,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accentRed,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceLarge,
+                  vertical: AppSizes.spaceMedium,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                'Skip Rest',
+                style: AppStyles.button.copyWith(color: Colors.white),
+              ),
+            ),
           ],
         ),
       ),

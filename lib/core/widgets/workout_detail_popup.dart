@@ -109,7 +109,7 @@ class WorkoutDetailPopup extends StatelessWidget {
                           AppStyles.body1.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      workoutData['description'] ?? 'No description available',
+                      workoutData['movements'] ?? 'No description available',
                       style: AppStyles.body2,
                     ),
                     if (workoutData['instructions'] != null) ...[
@@ -145,7 +145,10 @@ class WorkoutDetailPopup extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Close'),
+              child: const Text(
+                'Close',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ],

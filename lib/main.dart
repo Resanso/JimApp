@@ -20,7 +20,8 @@ import 'package:jim/app/routes/app_pages.dart';
 import 'package:jim/app/services/auth_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Initialize Firebase
   await Firebase.initializeApp(
@@ -30,17 +31,13 @@ void main() async {
   // Initialize Hive
   await AuthService.initialize();
 
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   // Initialize controllers
   Get.put<AnatomyController>(AnatomyController(), permanent: true);
   Get.put<ExercisePageController>(ExercisePageController(), permanent: true);
   Get.put<LoginPageController>(LoginPageController(), permanent: true);
   Get.put<SettingsController>(SettingsController(), permanent: true);
 
-  runApp(MyApp() // Gunakan MyApp() langsung, bukan GetMaterialApp baru
-      );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -57,9 +54,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'JimApp',
-          initialRoute: AuthService.isLoggedIn()
-              ? Routes.HOME
-              : Routes.LOGIN, // Perbaikan route check
+          initialRoute: AuthService.isLoggedIn() ? Routes.HOME : Routes.LOGIN,
           getPages: AppPages.routes, // Add the routes configuration
           theme: ThemeData(
             fontFamily: 'PlusJakartaSans', // Font default
@@ -92,31 +87,25 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true, // Add this line
       body: Obx(() => _pages[controller.currentIndex.value]),
       bottomNavigationBar: Obx(
-        () => Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 10,
-                spreadRadius: 0,
-              ),
-            ],
+        () => Theme(
+          data: Theme.of(context).copyWith(
+            iconTheme: IconThemeData(color: AppColors.white),
           ),
           child: CurvedNavigationBar(
-            backgroundColor: AppColors.primaryDark,
+            backgroundColor: Colors.transparent,
             color: AppColors.secondaryDark,
             buttonBackgroundColor: AppColors.accentRed,
             height: 60,
-            animationDuration: Duration(milliseconds: 300),
+            animationDuration: const Duration(milliseconds: 300),
             index: controller.currentIndex.value,
             onTap: controller.changePage,
-            items: [
-              Icon(Icons.home_rounded, size: 26, color: AppColors.white),
-              Icon(Icons.fitness_center_rounded,
-                  size: 26, color: AppColors.white),
-              Icon(Icons.settings_rounded, size: 26, color: AppColors.white),
+            items: const [
+              Icon(Icons.home_rounded, size: 26),
+              Icon(Icons.fitness_center_rounded, size: 26),
+              Icon(Icons.settings_rounded, size: 26),
             ],
           ),
         ),
